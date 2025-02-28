@@ -47,4 +47,54 @@ import User from '../models/user.js';
 
     }
  })
+ //login route
+ router.post('/login',async(req,res)=>{
+    try{
+        const {email,password}=req.body;
+        //1>validate user requset
+        if(!email ||! password){
+            return res.send({
+                message:"Email and password required",
+                success:false
+            });
+
+        }
+        //2.check if the user exist
+        const user=await User.findOne({email}).select('+password');
+        if(!user){
+            return res.send({
+                message:"user not found",
+                success:false
+            })
+        }
+        //3.check the password is valid or not
+        if(!user.password){
+            return res.send({
+                message:"user apssword is misssing",
+                success:false
+            })
+        }
+       const isMatch=await bcrypt.compare(password,user.password);
+       if(!isMatch){
+        return res.send({
+            message:"Invalid credentials",
+            success:false
+        })
+       }
+       //generate token
+       const token=jwt.sign({userId:user._id},process.env.SECRET_KEY,{expiresIn:'1d'});
+       return res.send({
+        message:"Login successful for the user",
+        success:true,
+        token
+       });
+
+    }
+    catch(err){
+        return res.send({
+            message:"server error",
+            success:false,
+           });
+    }
+ })
  export default router;
