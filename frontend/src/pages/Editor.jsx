@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import Portfolio from "../components/preview";
 
 const Editor = () => {
@@ -7,7 +8,7 @@ const Editor = () => {
     role: "",
     description: "",
     about: "",
-    techStack: "",
+    techStack: [],
     experience: "",
     projects: [],
     contact: {
@@ -18,6 +19,27 @@ const Editor = () => {
   });
 
   const [showPreview, setShowPreview] = useState(false);
+
+const [newTech, setNewTech] = useState("");
+
+const addTechStack = () => {
+  const normalizedTech = newTech.trim().toLowerCase().replace(/\.|\s/g, "");
+  
+  if (normalizedTech) {
+    setUserData({
+      ...userData,
+      techStack: [...userData.techStack, normalizedTech],
+    });
+    setNewTech("");
+  }
+};
+
+
+const removeTechStack = (index) => {
+  const updatedTechStack = [...userData.techStack];
+  updatedTechStack.splice(index, 1);
+  setUserData({ ...userData, techStack: updatedTechStack });
+};
   const addProject = () => {
     setUserData({ ...userData, projects: [...userData.projects, ""] });
   };
@@ -27,6 +49,16 @@ const Editor = () => {
     updatedProjects[index] = value;
     setUserData({ ...userData, projects: updatedProjects });
   };
+  
+
+useEffect(() => {
+  console.log("Updated userData:", userData);
+}, [userData]);
+useEffect(() => {
+  console.log("Updated techStack:", userData.techStack);
+}, [userData.techStack]);
+
+
 
 
   return (
@@ -78,13 +110,40 @@ const Editor = () => {
     />
 
     {/* Tech Stack */}
+   
+  <div className="space-y-4">
+  <label className="text-cyan-400 font-semibold">Tech Stack</label>
+  <div className="flex gap-2">
     <input
       type="text"
-      placeholder="Tech Stack (comma separated)"
+      placeholder="Add Tech Stack"
       className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
-      value={userData.techStack}
-      onChange={(e) => setUserData({ ...userData, techStack: e.target.value })}
+      value={newTech}
+      onChange={(e) => setNewTech(e.target.value)}
     />
+    <button
+      className="px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-all"
+      onClick={addTechStack}
+    >
+      Add
+    </button>
+  </div>
+  <div className="flex flex-wrap gap-2">
+    {userData.techStack.map((tech, index) => (
+      <div key={index} className="flex items-center gap-2 bg-gray-700 px-3 py-1 rounded-lg">
+        <span>{tech}</span>
+        <button
+          className="text-red-500 hover:text-red-600"
+          onClick={() => removeTechStack(index)}
+        >
+          ×
+        </button>
+      </div>
+    ))}
+  </div>
+</div>
+
+
 
     {/* Experience */}
     <textarea
