@@ -49,6 +49,7 @@ import User from '../models/user.js';
  })
  //login route
  router.post('/login',async(req,res)=>{
+    console.log(req.body);
     try{
         const {email,password}=req.body;
         //1>validate user requset

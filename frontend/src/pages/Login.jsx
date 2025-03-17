@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+import { LoginUser } from "../apiCalls/auth";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [userData, setUserData] = useState({
@@ -14,9 +16,33 @@ const Login = () => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async(e) => {
     e.preventDefault();
-    navigate("/dashboard");
+    if(!userData.email||!userData.password){
+      alert("please fill the two fields");
+      return;
+    }
+    try{
+      const response=await LoginUser(userData);
+      if(response.success){
+        toast.success(response.message);
+        localStorage.setItem('token',response.token);
+        setTimeout(() => {
+          navigate("/dashboard");
+      }, 1500);
+
+      }
+      else{
+        toast.error(response.message);
+
+      }
+
+    }
+    catch(err){
+      toast.error(`Error :${err.message}||something went wrong`)
+      
+
+    }
   };
 
   return (
