@@ -1,54 +1,84 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import Portfolio from "../components/preview";
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+  setUserData, 
+  addTechStack, 
+  removeTechStack, 
+  addExperience, 
+  updateExperience, 
+  removeExperience, 
+  addProject, 
+  updateProject, 
+  removeProject, 
+  updateContact 
+} from '../store/userSlice';
 
 const Editor = () => {
-  const [userData, setUserData] = useState({
-    name: "",
-    role: "",
-    description: "",
-    about: "",
-    techStack: [],
-    experience: "",
-    projects: [],
-    contact: {
-      email: "",
-      phone: "",
-      linkedin: "",
-    },
-  });
-
+  
+const dispatch=useDispatch();
+const { userData } = useSelector((state) => state.user);
   const [showPreview, setShowPreview] = useState(false);
 
 const [newTech, setNewTech] = useState("");
+const [newProject, setNewProject] = useState("");
+const [newExperience, setNewExperience] = useState("");
 
-const addTechStack = () => {
-  const normalizedTech = newTech.trim().toLowerCase().replace(/\.|\s/g, "");
-  
-  if (normalizedTech) {
-    setUserData({
-      ...userData,
-      techStack: [...userData.techStack, normalizedTech],
-    });
+const handleAddTechStack = () => {
+  if (newTech.trim() !== "") {
+    dispatch(addTechStack(newTech));
     setNewTech("");
+}}
+
+
+// const removeTechStack = (index) => {
+//   const updatedTechStack = [...userData.techStack];
+//   updatedTechStack.splice(index, 1);
+//   setUserData({ ...userData, techStack: updatedTechStack });
+// };
+const handleRemoveTechStack = (index) => {
+  dispatch(removeTechStack(index));
+};
+// const addProject = () => {
+//   setUserData((prevData) => ({
+//       ...prevData,
+//       projects: [...prevData.projects, { title: "", description: "", images: [] }]
+//   }));
+// };
+
+
+// const updateProject = (index, field, value) => {
+//   const updatedProjects = [...userData.projects];
+//   updatedProjects[index][field] = value;
+//   setUserData({ ...userData, projects: updatedProjects });
+// };
+const handleAddProject = () => {
+  if (newProject.trim() !== "") {
+      dispatch(addProject());
+      setNewProject("");
   }
 };
 
-
-const removeTechStack = (index) => {
-  const updatedTechStack = [...userData.techStack];
-  updatedTechStack.splice(index, 1);
-  setUserData({ ...userData, techStack: updatedTechStack });
+const handleRemoveProject = (index) => {
+  dispatch(removeProject(index));
 };
-  const addProject = () => {
-    setUserData({ ...userData, projects: [...userData.projects, ""] });
-  };
 
-  const updateProject = (index, value) => {
-    const updatedProjects = [...userData.projects];
-    updatedProjects[index] = value;
-    setUserData({ ...userData, projects: updatedProjects });
+  const handleaddExperience = () => {
+    if (newExperience.trim() !== "") {
+      dispatch(addExperience());
+      setNewExperience("");
+  }
   };
+  const handleRemoveExperience=(index)=>{
+    dispatch(removeExperience(index));
+  }
+
+  // const updateExperience = (index, value) => {
+  //   const updatedExperiences = [...userData.experience];
+  //   updatedExperiences[index] = value;
+  //   setUserData({ ...userData, experience: updatedExperiences});
+  // };
   
 
 useEffect(() => {
@@ -62,20 +92,23 @@ useEffect(() => {
 
 
   return (
-    <div className={`${showPreview ? "min-h-screen overflow-x-hidden" : "min-h-screen flex justify-center items-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-neutral-200 p-6"}`}
+    <div className={` ${showPreview ? "min-h-screen overflow-x-hidden" : "min-h-screen flex justify-center items-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-neutral-200 p-6"}`}
     >
       {showPreview ? (
-        <div className="relative">
+        <div className="relative w-full min-h-screen">
           {/* Back Button */}
           <button
-            className="absolute top-4 left-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            className="absolute z-[15] top-6 left-4 lg:left-[620px] px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
             onClick={() => setShowPreview(false)}
           >
-            Back to Editor
+          Back to Editor
           </button>
 
+
           {/* Portfolio Component */}
+          <div>
           <Portfolio userData={userData} />
+          </div>
          
         </div>
       ) : (
@@ -84,13 +117,24 @@ useEffect(() => {
 
   <div className="space-y-6">
     {/* Name */}
+    <div className="space-y-6">
+    <div  className="flex gap-2 rounded-lg bg-gray-800">
     <input
       type="text"
-      placeholder="Your Name"
+      placeholder="first name"
       className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
       value={userData.name}
-      onChange={(e) => setUserData({ ...userData, name: e.target.value })}
+      onChange={(e) => dispatch(setUserData({ ...userData, firstName: e.target.value }))}
     />
+    <input
+      type="text"
+      placeholder="last name"
+      className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+      value={userData.name}
+      onChange={(e) => dispatch(setUserData({ ...userData, lastName: e.target.value }))}
+    />
+    </div>
+    </div>
 
     {/* Role */}
     <input
@@ -98,7 +142,14 @@ useEffect(() => {
       placeholder="Your Role"
       className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
       value={userData.role}
-      onChange={(e) => setUserData({ ...userData, role: e.target.value })}
+      onChange={(e) => dispatch(setUserData({ ...userData, role: e.target.value }))}
+    />
+    {/* description or summary of your job */}
+    <textarea
+      placeholder="summary or objective"
+      className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+      value={userData.description}
+      onChange={(e) => dispatch(setUserData({ ...userData, description: e.target.value }))}
     />
 
     {/* About */}
@@ -106,7 +157,7 @@ useEffect(() => {
       placeholder="About You"
       className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
       value={userData.about}
-      onChange={(e) => setUserData({ ...userData, about: e.target.value })}
+      onChange={(e) => dispatch(setUserData({ ...userData, about: e.target.value }))}
     />
 
     {/* Tech Stack */}
@@ -123,7 +174,7 @@ useEffect(() => {
     />
     <button
       className="px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-all"
-      onClick={addTechStack}
+      onClick={handleAddTechStack}
     >
       Add
     </button>
@@ -134,7 +185,7 @@ useEffect(() => {
         <span>{tech}</span>
         <button
           className="text-red-500 hover:text-red-600"
-          onClick={() => removeTechStack(index)}
+          onClick={() => handleRemoveTechStack(index)}
         >
           ×
         </button>
@@ -146,65 +197,151 @@ useEffect(() => {
 
 
     {/* Experience */}
-    <textarea
+    <div className="space-y-4">
+      <label className="text-cyan-400 font-semibold">Experience</label>
+      {userData.experience.map((experience, index) => (
+       <div key={index} className="grid grid-cols-4 gap-3 p-3 rounded-lg bg-gray-800">
+       <input
+           type="text"
+           placeholder={`Company`}
+           className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+           value={experience.company}
+           onChange={(e) => dispatch(updateExperience({index, field: 'company', value:e.target.value}))}
+       />
+        <input
+           type="text"
+           placeholder={`position`}
+           className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+           value={experience.position}
+           onChange={(e) =>
+            dispatch(updateExperience({index, field: 'position', value:e.target.value}))}
+       />
+       <input
+           type="text"
+           placeholder={`duration:2022-23`}
+           className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+           value={experience.duration}
+           onChange={(e) =>
+            dispatch(updateExperience({index, field: 'duration', value:e.target.value}))}
+       />
+       <textarea
+           placeholder={`Description`}
+           className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+           value={experience.description}
+           onChange={(e) => dispatch(updateExperience({index, field: 'description', value:e.target.value}))}
+       />
+        <input
+                type="text"
+                placeholder="Technologies (comma-separated)"
+                className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg"
+                value={experience?.technologies?.join(", ")}
+                onChange={(e) =>
+                    dispatch(updateExperience({ index, field: 'technologies', value: e.target.value.split(",") }))
+                }
+            />
+        <button
+                className="text-red-500 hover:text-red-600"
+                onClick={() => handleRemoveExperience(index)}
+            >
+                Remove
+            </button>
+      
+   </div>
+      ))}
+      <button
+        className="w-full py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-all"
+        onClick={()=>dispatch(addExperience())}
+      >
+        + Add Experience
+      </button>
+    </div>
+    {/* <textarea
       placeholder="Your Experience"
       className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
       value={userData.experience}
       onChange={(e) => setUserData({ ...userData, experience: e.target.value })}
-    />
+    /> */}
 
     {/* Projects */}
-    <div className="space-y-4">
-      <label className="text-cyan-400 font-semibold">Projects</label>
-      {userData.projects.map((project, index) => (
-        <input
-          key={index}
-          type="text"
-          placeholder={`Project ${index + 1}`}
-          className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
-          value={project}
-          onChange={(e) => updateProject(index, e.target.value)}
-        />
-      ))}
-      <button
-        className="w-full py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-all"
-        onClick={addProject}
-      >
+ {/* Projects */}
+ <div className="space-y-4 mt-6">
+    <label className="text-cyan-400 font-semibold">Projects</label>
+    {userData.projects.map((project, index) => (
+        <div key={index} className="grid grid-cols-3 gap-3 p-3 rounded-lg bg-gray-800">
+            <input
+                type="text"
+                placeholder="Title"
+                className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg"
+                value={project.title}
+                onChange={(e) => dispatch(updateProject({ index, field: 'title', value: e.target.value }))}
+            />
+            <textarea
+                placeholder="Description"
+                className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg"
+                value={project.description}
+                onChange={(e) => dispatch(updateProject({ index, field: 'description', value: e.target.value }))}
+            />
+            <input
+                type="file"
+                placeholder="Image URLs (comma-separated)"
+                className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg"
+                value={project.images.join(", ")}
+                onChange={(e) =>
+                    dispatch(updateProject({ index, field: 'images', value: e.target.value.split(",") }))
+                }
+            />
+            
+            {/* Technologies Input */}
+            <input
+                type="text"
+                placeholder="Technologies (comma-separated)"
+                className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg"
+                value={project.technologies.join(", ")}
+                onChange={(e) =>
+                    dispatch(updateProject({ index, field: 'technologies', value: e.target.value.split(",") }))
+                }
+            />
+
+            <button
+                className="text-red-500 hover:text-red-600"
+                onClick={() => handleRemoveProject(index)}
+            >
+                Remove
+            </button>
+        </div>
+    ))}
+
+    <button
+        className="w-full py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-all"
+        onClick={() => dispatch(addProject())}
+    >
         + Add Project
-      </button>
-    </div>
+    </button>
+</div>
+
+
+
 
     {/* Contact */}
     <div className="space-y-4">
-      <label className="text-cyan-400 font-semibold">Contact Information</label>
-      <input
-        type="text"
-        placeholder="Email"
-        className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
-        value={userData.contact.email}
-        onChange={(e) =>
-          setUserData({ ...userData, contact: { ...userData.contact, email: e.target.value } })
-        }
-      />
-      <input
-        type="text"
-        placeholder="Phone"
-        className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
-        value={userData.contact.phone}
-        onChange={(e) =>
-          setUserData({ ...userData, contact: { ...userData.contact, phone: e.target.value } })
-        }
-      />
-      <input
-        type="text"
-        placeholder="LinkedIn"
-        className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
-        value={userData.contact.linkedin}
-        onChange={(e) =>
-          setUserData({ ...userData, contact: { ...userData.contact, linkedin: e.target.value } })
-        }
-      />
+    <label className="text-cyan-400 font-semibold">Contact Information</label>
+    <div className="grid grid-cols-2 gap-3">
+        {Object.keys(userData.contact).map((key) => (
+            <input
+                key={key}
+                type={key === "phone" ? "tel" : "text"}  // Phone input as type="tel"
+                placeholder={key.charAt(0).toUpperCase() + key.slice(1)}
+                className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+                value={userData.contact[key]}
+                onChange={(e) =>
+                    dispatch(updateContact({ key: key, value: e.target.value }))
+                }
+            />
+        ))}
     </div>
+</div>
+
+
 
     {/* Preview Button */}
     <button

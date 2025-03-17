@@ -1,80 +1,3 @@
-// import {RiReactjsLine}  from "react-icons/ri";
-// import {TbBrandNextjs}  from "react-icons/tb";
-// import {SiMongodb}  from "react-icons/si";
-// import {DiRedis}  from "react-icons/di";
-// import {FaNodeJs}  from "react-icons/fa";
-// import {BiLogoPostgresql}  from "react-icons/bi";
-// import {motion} from "motion/react"
-// const iconVariants=(duration)=>({
-//    initial:{y:-10},
-//    animate:{y:[10,-10],
-//     transition:{
-//       duration,
-//       ease:"linear",
-//       repeat:Infinity,
-//       repeatType:"reverse"
-//     }
-//   }
-// })
-
-
-// const  Technoligies= () => {
-//   return (
-//     <div className='border-b border-neutral-900 pb-2'>
-//         <motion.h1 whileInView={{opacity:1,y:0}}
-//         initial={{opacity:0,y:-100}}
-//         transition={{duration:1.5}}
-//         className='my-20 text-center text-4xl'>Technologies</motion.h1>
-//         <motion.div whileInView={{opacity:1,x:0}}
-//         initial={{opacity:0,x:-100}}
-//         transition={{duration:1.5}}
-//         className='flex flex-wrap items-center justify-center gap-4'>
-//             <motion.div variants={iconVariants(2.5)}
-//             initial="initial"
-//             animate='animate'
-//             className='rounded-2xl border-4 border-neutral-800 p-4'>
-//              <RiReactjsLine className=" text-7xl text-cyan-400"/>
-//             </motion.div>
-//             <motion.div variants={iconVariants(3)}
-//             initial="initial"
-//             animate='animate'
-//             className='rounded-2xl border-4 border-neutral-800 p-4'>
-//              <TbBrandNextjs className=" text-7xl "/>
-//             </motion.div>
-//             <motion.div variants={iconVariants(5)}
-//             initial="initial"
-//             animate='animate'
-//             className='rounded-2xl border-4 border-neutral-800 p-4'>
-//              <SiMongodb className=" text-7xl text-green-400"/>
-//             </motion.div>
-//             <motion.div variants={iconVariants(6)}
-//             initial="initial"
-//             animate='animate'
-//             className='rounded-2xl border-4 border-neutral-800 p-4'>
-//              <DiRedis className=" text-7xl text-red-700"/>
-//             </motion.div>
-//             <motion.div variants={iconVariants(7)}
-//             initial="initial"
-//             animate='animate'
-//             className='rounded-2xl border-4 border-neutral-800 p-4'>
-//              <FaNodeJs className=" text-7xl text-green-400"/>
-//             </motion.div>
-//             < motion.div variants={iconVariants(4)}
-//             initial="initial"
-//             animate='animate'
-//             className='rounded-2xl border-4 border-neutral-800 p-4'>
-//              <BiLogoPostgresql className=" text-7xl text-blue-700"/>
-//             </motion.div>
-            
-             
-
-//         </motion.div>
-
-//     </div>
-//   )
-// }
-
-// export default Technoligies;import * as SiIcons from "react-icons/si";
 import * as FaIcons from "react-icons/fa";
 import * as DiIcons from "react-icons/di";
 import * as TbIcons from "react-icons/tb";
@@ -84,6 +7,8 @@ import * as MdIcons from "react-icons/md";
 import * as IoIcons from "react-icons/io5";
 import * as SiIcons from "react-icons/si";
 import { motion } from "framer-motion";
+import React from "react";
+
 
 const iconSets = { Si: SiIcons, Fa: FaIcons, Di: DiIcons, Tb: TbIcons, Ri: RiIcons, Bi: BiIcons, Md: MdIcons, Io: IoIcons };
 
@@ -92,15 +17,42 @@ const iconVariants = (duration) => ({
   animate: { y: [10, -10], transition: { duration, ease: "linear", repeat: Infinity, repeatType: "reverse" } }
 });
 
+const techColors = {
+  html: "#E34F26",
+  css: "#1572B6",
+  javascript: "#F7DF1E",
+  react: "#61DAFB",
+  nodejs: "#8CC84B",
+  mongodb: "#47A248",
+  express: "#000000",
+  tailwind: "#38B2AC",
+  firebase: "#FFCA28",
+  typescript: "#3178C6",
+  python: "#3776AB",
+  flutter: "#02569B",
+  nextjs: "#000000", // Dark theme
+  redux: "#764ABC",
+  graphql: "#E10098",
+  aws: "#FF9900",
+  docker: "#2496ED",
+  github: "#181717"
+};
+
 const getIconComponent = (stack) => {
   const formattedStack = stack.replace(/\s/g, "").toLowerCase();
 
   const specialCases = {
-    nextjs: "SiNextdotjs", // Map "Next.js" or "Nextjs" to "SiNextdotjs"
+    nextjs: "SiNextdotjs",
   };
 
+  const color = techColors[formattedStack] || "#FFFFFF"; // Default to white if no color is found
+
   if (specialCases[formattedStack]) {
-    return SiIcons[specialCases[formattedStack]];
+    return ({ className }) => (
+      <div className="relative w-20 h-20 flex items-center justify-center" style={{ color }}>
+        {React.createElement(SiIcons[specialCases[formattedStack]], { className: "text-7xl" })}
+      </div>
+    );
   }
 
   for (const [lib, icons] of Object.entries(iconSets)) {
@@ -111,13 +63,26 @@ const getIconComponent = (stack) => {
     ];
 
     for (const name of possibleNames) {
-      if (icons[name]) return icons[name];
+      if (icons[name]) {
+        return ({ className }) => (
+          <div className="relative w-20 h-20 flex items-center justify-center" style={{ color }}>
+            {React.createElement(icons[name], { className: "text-7xl" })}
+          </div>
+        );
+      }
     }
   }
 
-  console.warn(`⚠️ Icon not found for: ${stack}`);
-  return FaIcons.FaCode; // Fallback icon
+  return ({ className }) => (
+    <div className="relative w-20 h-20 flex items-center justify-center">
+      <FaIcons.FaCode className="text-7xl text-neutral-400" />
+      <span className="absolute text-white text-sm font-bold">
+        {stack.slice(0, 6).toUpperCase()}
+      </span>
+    </div>
+  );
 };
+
 
 
 

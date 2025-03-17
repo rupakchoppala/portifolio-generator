@@ -1,7 +1,7 @@
 //import { ABOUT_TEXT } from "../constants";
 import {motion} from "motion/react";
 
-const About=()=>{
+const About=({data})=>{
     return (
       <div className="border-b border-neutral-900 pb-4">
         <h1 className="my-20 text-center text-4xl">About
@@ -20,7 +20,7 @@ const About=()=>{
                 transition={{duration:0.5}}
                 className="w-full lg:w-1/2">
                     <div className="flex justify-center lg:justify-start">
-                        <p className="my-2 max-w-xl py-6"></p>
+                        <p className="my-2 max-w-xl py-6">{data.about}</p>
 
                     </div>
 

@@ -3,7 +3,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor";
 import Portfolio from "./components/preview";
-
+import Register from "./pages/Register";
 function App() {
   return (
     <Router>
@@ -12,6 +12,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/editor" element={<Editor />} />
         <Route path="/preview" element={< Portfolio/>} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
