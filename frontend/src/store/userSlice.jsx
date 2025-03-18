@@ -28,7 +28,7 @@ const userSlice = createSlice({
         setUserData: (state, action) => {
             state.userData = { ...state.userData, ...action.payload };
         },
-        
+
         // Tech Stack
         addTechStack: (state, action) => {
             state.userData.techStack.push(action.payload);
@@ -60,11 +60,11 @@ const userSlice = createSlice({
             state.userData.projects.push({
                 title: "",
                 description: "",
-                images: [],
-                technologies:[]
+                image: "",
+                technologies: []
             });
         },
-        updateProject: (state, action) => {
+        updateProject: (state, action) => {  // ✅ Now inside the reducers object
             const { index, field, value } = action.payload;
             state.userData.projects[index][field] = value;
         },
@@ -77,8 +77,20 @@ const userSlice = createSlice({
             const { key, value } = action.payload;
             state.userData.contact[key] = value;
         },
+        updateProjectImage: (state, action) => {
+            const { index, image } = action.payload;
+        
+            // Ensure the project at the given index exists before updating
+            if (state.userData.projects[index]) {
+                state.userData.projects[index].image = image;
+            } else {
+                console.error(`Project at index ${index} does not exist.`);
+            }
+        }
+        
     }
 });
+
 
 export const { 
     setUserData, 
@@ -90,7 +102,8 @@ export const {
     addProject, 
     updateProject, 
     removeProject, 
-    updateContact 
+    updateContact,
+    updateProjectImage 
 } = userSlice.actions;
 
 export default userSlice.reducer;

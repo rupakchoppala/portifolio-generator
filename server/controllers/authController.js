@@ -87,7 +87,8 @@ import User from '../models/user.js';
        return res.send({
         message:"Login successful for the user",
         success:true,
-        token
+        token,
+        id:user._id
        });
 
     }

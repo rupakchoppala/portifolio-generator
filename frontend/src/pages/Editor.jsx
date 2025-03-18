@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import Portfolio from "../components/preview";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
+import { UploadProfilePic ,createPortifolio} from "../apiCalls/user";
+import toast from "react-hot-toast";
+import axios from "axios";
+
 import { 
   setUserData, 
   addTechStack, 
@@ -9,14 +14,16 @@ import {
   addExperience, 
   updateExperience, 
   removeExperience, 
-  addProject, 
-  updateProject, 
+  addProject,
   removeProject, 
-  updateContact 
+  updateContact,
+  updateProjectImage 
 } from '../store/userSlice';
+import { updateProject } from "../store/userSlice";
+import axiosInstance from "../apiCalls";
 
 const Editor = () => {
-  
+  const navigate=useNavigate();
 const dispatch=useDispatch();
 const { userData } = useSelector((state) => state.user);
   const [showPreview, setShowPreview] = useState(false);
@@ -24,62 +31,106 @@ const { userData } = useSelector((state) => state.user);
 const [newTech, setNewTech] = useState("");
 const [newProject, setNewProject] = useState("");
 const [newExperience, setNewExperience] = useState("");
+const [image,setImage]=useState('');// File Selection Function
+const onFileSelect = (index) => (e) => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
 
+  reader.onloadend = () => {
+      if (index !== undefined) {
+          dispatch(updateProjectImage({ index, image: reader.result }));
+      } else {
+          console.error("Index is undefined in onFileSelect.");
+      }
+  };
+
+  if (file) {
+      reader.readAsDataURL(file); // Convert to Base64
+  }
+};
+const onImageSelect = (e) => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onloadend = () => {
+      
+          dispatch(setUserData({ ...userData, profilePic: reader.result }));
+  };
+
+  if (file) {
+      reader.readAsDataURL(file); // Convert to Base64
+  }
+};
+const onaboutSelect = (e) => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onloadend = () => {
+      
+          dispatch(setUserData({ ...userData, aboutPic: reader.result }));
+  };
+
+  if (file) {
+      reader.readAsDataURL(file); // Convert to Base64
+  }
+};
+
+
+
+// Upload Function
+// const updateProfilePic = async () => {
+//   try {
+//       if (!image) {
+//           toast.error("Please select an image first.");
+//           return;
+//       }
+
+//       const userId = localStorage.getItem("id");
+//       if (!userId) {
+//           toast.error("User ID not found. Please log in again.");
+//           return;
+//       }
+
+//       const formData = new FormData();
+//       formData.append("image", image); 
+//       formData.append("userId", userId);
+
+//       // ✅ Log `FormData` content
+//       for (let pair of formData.entries()) {
+//           console.log(`${pair[0]}:`, pair[1]);
+//       }
+
+//       const response = await axiosInstance.post(
+//           `/api/user/upload-project-pic`,
+//           formData,
+//           { headers: { 'Content-Type': 'multipart/form-data' } } // <-- Important for `axios`
+//       );
+//       if (response.data.success) {
+//           toast.success(response.data.message);
+//       } else {
+//           toast.error(response.data.message);
+//       }
+//   } catch (err) {
+//       console.error(err);
+//       toast.error(err.response?.data?.message || err.message);
+//   }
+// };
 const handleAddTechStack = () => {
   if (newTech.trim() !== "") {
     dispatch(addTechStack(newTech));
     setNewTech("");
 }}
-
-
-// const removeTechStack = (index) => {
-//   const updatedTechStack = [...userData.techStack];
-//   updatedTechStack.splice(index, 1);
-//   setUserData({ ...userData, techStack: updatedTechStack });
-// };
 const handleRemoveTechStack = (index) => {
   dispatch(removeTechStack(index));
-};
-// const addProject = () => {
-//   setUserData((prevData) => ({
-//       ...prevData,
-//       projects: [...prevData.projects, { title: "", description: "", images: [] }]
-//   }));
-// };
-
-
-// const updateProject = (index, field, value) => {
-//   const updatedProjects = [...userData.projects];
-//   updatedProjects[index][field] = value;
-//   setUserData({ ...userData, projects: updatedProjects });
-// };
-const handleAddProject = () => {
-  if (newProject.trim() !== "") {
-      dispatch(addProject());
-      setNewProject("");
-  }
 };
 
 const handleRemoveProject = (index) => {
   dispatch(removeProject(index));
 };
 
-  const handleaddExperience = () => {
-    if (newExperience.trim() !== "") {
-      dispatch(addExperience());
-      setNewExperience("");
-  }
-  };
   const handleRemoveExperience=(index)=>{
     dispatch(removeExperience(index));
   }
-
-  // const updateExperience = (index, value) => {
-  //   const updatedExperiences = [...userData.experience];
-  //   updatedExperiences[index] = value;
-  //   setUserData({ ...userData, experience: updatedExperiences});
-  // };
-  
 
 useEffect(() => {
   console.log("Updated userData:", userData);
@@ -88,11 +139,33 @@ useEffect(() => {
   console.log("Updated techStack:", userData.techStack);
 }, [userData.techStack]);
 
+const formSubmit = async (e) => {
+  e.preventDefault();
+  try {
+      const response = await axiosInstance.post(
+          `/api/user/create-portifolio`,
+          userData
+      );
+      // Use `response.data.success` instead of `response?.success`
+      if (response.data?.success) {
+          toast.success(response.data?.message);
+          navigate('/preview');
+      } else {
+          toast.error(response.data?.message || "Unexpected error occurred");
+      }
+
+  } catch (error) {
+      console.error("Error during signup:", error);
+      toast.error(`Error: ${error.response?.data?.message || error.message || "Something went wrong"}`);
+  }
+}
+
+
 
 
 
   return (
-    <div className={` ${showPreview ? "min-h-screen overflow-x-hidden" : "min-h-screen flex justify-center items-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-neutral-200 p-6"}`}
+    <div className={` ${showPreview ? "min-h-screen overflow-x-hidden font-inter" : "min-h-screen flex justify-center items-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-neutral-200 p-6 font-inter"}`}
     >
       {showPreview ? (
         <div className="relative w-full min-h-screen">
@@ -119,24 +192,42 @@ useEffect(() => {
     {/* Name */}
     <div className="space-y-6">
     <div  className="flex gap-2 rounded-lg bg-gray-800">
+      <div>
+    <label className="text-cyan-400 font-semibold">First Name</label>
     <input
       type="text"
       placeholder="first name"
       className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
-      value={userData.name}
+      value={userData.firstName}
       onChange={(e) => dispatch(setUserData({ ...userData, firstName: e.target.value }))}
     />
+    </div>
+    <div>
+    <label className="text-cyan-400 font-semibold">Last Name</label>
     <input
       type="text"
       placeholder="last name"
       className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
-      value={userData.name}
+      value={userData.lastName}
       onChange={(e) => dispatch(setUserData({ ...userData, lastName: e.target.value }))}
     />
+    </div>
+    <div>
+    <label className="text-cyan-400 font-semibold">User Image</label>
+     <input
+       type="file"
+       accept="image/*"
+      className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+      name="profilePic"
+      onChange={onImageSelect}
+    />
+    </div>
+
     </div>
     </div>
 
     {/* Role */}
+    <label className="text-cyan-400 font-semibold">Role</label>
     <input
       type="text"
       placeholder="Your Role"
@@ -145,6 +236,7 @@ useEffect(() => {
       onChange={(e) => dispatch(setUserData({ ...userData, role: e.target.value }))}
     />
     {/* description or summary of your job */}
+    <label className="text-cyan-400 font-semibold">Objective</label>
     <textarea
       placeholder="summary or objective"
       className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
@@ -153,13 +245,31 @@ useEffect(() => {
     />
 
     {/* About */}
+    
+   
+    
+    <div  className="flex gap-2 rounded-lg bg-gray-800">
+      <div>
+    <label className="text-cyan-400 font-semibold">AboutMe</label>
     <textarea
       placeholder="About You"
-      className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+      className="lg:w-[500px] w-full p-3 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
       value={userData.about}
       onChange={(e) => dispatch(setUserData({ ...userData, about: e.target.value }))}
     />
-
+    </div>
+    <div>
+    <label className="text-cyan-400 font-semibold">About Image</label>
+    <input
+       type="file"
+       accept="image/*"
+      className="w-full p-6 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+      name="aboutPic"
+      onChange={onaboutSelect}
+    />
+    </div>
+  </div>
+ 
     {/* Tech Stack */}
    
   <div className="space-y-4">
@@ -273,34 +383,43 @@ useEffect(() => {
                 placeholder="Title"
                 className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg"
                 value={project.title}
-                onChange={(e) => dispatch(updateProject({ index, field: 'title', value: e.target.value }))}
+                onChange={(e) => 
+                  dispatch(updateProject({ index, field: 'title', value: e.target.value }))}
             />
             <textarea
                 placeholder="Description"
                 className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg"
                 value={project.description}
-                onChange={(e) => dispatch(updateProject({ index, field: 'description', value: e.target.value }))}
+                onChange={(e) => 
+                  dispatch(updateProject({ index, field: 'description', value: e.target.value }))}
             />
-            <input
-                type="file"
-                placeholder="Image URLs (comma-separated)"
-                className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg"
-                value={project.images.join(", ")}
-                onChange={(e) =>
-                    dispatch(updateProject({ index, field: 'images', value: e.target.value.split(",") }))
-                }
-            />
-            
-            {/* Technologies Input */}
-            <input
+             {/* Technologies Input */}
+             <input
                 type="text"
                 placeholder="Technologies (comma-separated)"
                 className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg"
                 value={project.technologies.join(", ")}
                 onChange={(e) =>
-                    dispatch(updateProject({ index, field: 'technologies', value: e.target.value.split(",") }))
+                  dispatch(updateProject({ index, field: 'technologies', value: e.target.value.split(",") }))
                 }
             />
+           <input
+    type="file"
+    name="image"
+    accept="image/*"
+    className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg"
+    onChange={onFileSelect(index)}
+/>
+
+{/* <button
+    className="upload-img-btn border-[2px] text-black w-[100px] rounded-lg bg-green-200 mt-[30px] hover:bg-orange-500"
+    onClick={updateProfilePic}
+>
+    Upload
+</button> */}
+
+            
+           
 
             <button
                 className="text-red-500 hover:text-red-600"
@@ -351,10 +470,18 @@ useEffect(() => {
       Preview Portfolio →
     </button>
   </div>
+  <button
+      className="w-full py-3 mt-6 bg-cyan-500 text-white font-bold text-lg rounded-lg hover:bg-cyan-600 transition-all"
+      onClick={formSubmit}
+    >
+      create portifolio
+    </button>
 </div>
 
       )}
+     
     </div>
+    
   );
 };
 

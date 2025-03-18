@@ -15,16 +15,16 @@ const Navbar = ({data}) => {
       </div>
 
       <div className="m-8 flex items-center gap-4 text-2xl">
-        <a href="https://www.linkedin.com/i/rupak-choppala-689659253?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener noreferrer">
+        <a href={data?.contact.linkedin} target="_blank" rel="noopener noreferrer">
           <FaLinkedin />
         </a>
-        <a href="https://github.com/rupakchoppala" target="_blank" rel="noopener noreferrer">
+        <a href={data?.contact.git} target="_blank" rel="noopener noreferrer">
           <FaGithub />
         </a>
-        <a href="https://www.instagram.com/rockie_rupak/?next=%2F&hl=en" target="_blank" rel="noopener noreferrer">
+        <a href={data?.contact.insta} target="_blank" rel="noopener noreferrer">
           <FaInstagram />
         </a>
-        <a href="https://twitter.com/your-profile" target="_blank" rel="noopener noreferrer">
+        <a href={data?.contact.x} target="_blank" rel="noopener noreferrer">
           <FaXTwitter />
         </a>
       </div>

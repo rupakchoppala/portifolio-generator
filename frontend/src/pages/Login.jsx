@@ -27,6 +27,7 @@ const Login = () => {
       if(response.success){
         toast.success(response.message);
         localStorage.setItem('token',response.token);
+        localStorage.setItem('id',response.id);
         setTimeout(() => {
           navigate("/dashboard");
       }, 1500);
