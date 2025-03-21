@@ -16,12 +16,7 @@ const UserPortfolio = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          setError("No token found. Please log in.");
-          return;
-        }
+        
 
         const response = await fetch(`https://portifolio-generator-4.onrender.com/api/user/${userId}`, {
           method: "GET",
