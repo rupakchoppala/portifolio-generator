@@ -46,7 +46,7 @@ function App() {
         <Route path="/preview" element={<ProtectedRoute>< Portfolio userData={userData}/></ProtectedRoute>} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Home />} />
-        <Route path="/user/:username" element={<UserPortfolio />} />
+        <Route path="/api/user/:username" element={<UserPortfolio />} />
       </Routes>
     </Router>
     </>
