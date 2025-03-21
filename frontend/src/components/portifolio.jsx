@@ -9,13 +9,13 @@ import Projects from "./Projects";
 import Contact from "./contacts";
 
 const UserPortfolio = () => {
-  const { firstName } = useParams();  // Get the username from the URL
+  const { userId } = useParams();  // Get the username from the URL
   const [userData, setUserData] = useState(null);
 
   useEffect(async() => {
     const token = localStorage.getItem("token"); // Assuming you're storing it here
 
-const response = await fetch(`https://portifolio-generator-4.onrender.com/api/user/${firstName}`, {
+const response = await fetch(`https://portifolio-generator-4.onrender.com/api/user/${userId}`, {
   method: "GET",
   headers: {
     "Content-Type": "application/json",

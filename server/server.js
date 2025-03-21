@@ -8,9 +8,9 @@ if (!port) {
     console.error("Port number not found in environment variables!");
     process.exit(1);
 }
-app.get("/api/user/:username", async (req, res) => {
-    const { username } = req.params;
-    const user = await User.findOne({ firstName:username }); // Fetch user data from DB
+app.get("/api/user/:userId", async (req, res) => {
+    const { userId } = req.params;
+    const user = await User.findOne({ userId }); // Fetch user data from DB
   
     if (!user) {
       return res.status(404).json({ message: "User not found" });
