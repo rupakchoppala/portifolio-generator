@@ -15,16 +15,16 @@ const Navbar = ({data}) => {
       </div>
 
       <div className="m-8 flex items-center gap-4 text-2xl">
-        <a href={data?.contact.linkedin} target="_blank" rel="noopener noreferrer">
+        <a href={data?.contact?.linkedin} target="_blank" rel="noopener noreferrer">
           <FaLinkedin />
         </a>
-        <a href={data?.contact.git} target="_blank" rel="noopener noreferrer">
+        <a href={data?.contact?.git} target="_blank" rel="noopener noreferrer">
           <FaGithub />
         </a>
-        <a href={data?.contact.insta} target="_blank" rel="noopener noreferrer">
+        <a href={data?.contact?.insta} target="_blank" rel="noopener noreferrer">
           <FaInstagram />
         </a>
-        <a href={data?.contact.x} target="_blank" rel="noopener noreferrer">
+        <a href={data?.contact?.x} target="_blank" rel="noopener noreferrer">
           <FaXTwitter />
         </a>
       </div>
