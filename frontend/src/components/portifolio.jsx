@@ -17,7 +17,7 @@ const UserPortfolio = () => {
       .then((res) => res.json())
       .then((data) => setUserData(data))
       .catch((err) => console.error(err));
-  }, [username]);
+  }, [firstName]);
 
   if (!userData) return <h2>Loading...</h2>;
 
