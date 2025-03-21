@@ -25,7 +25,7 @@ const response = await fetch(`https://portifolio-generator-4.onrender.com/api/us
 });
 const data = await response.data;
 setUserData(data);
-  }, [firstName]);
+  }, [userId]);
 
   if (!userData) return <h2>Loading...</h2>;
 
