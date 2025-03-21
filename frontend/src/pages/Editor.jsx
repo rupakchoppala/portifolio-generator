@@ -3,10 +3,9 @@ import { useEffect } from "react";
 import Portfolio from "../components/preview";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { UploadProfilePic ,createPortifolio} from "../apiCalls/user";
 import toast from "react-hot-toast";
-import axios from "axios";
-
+import LogoutButton from "../components/Logout";
+import { useLocation } from "react-router-dom";
 import { 
   setUserData, 
   addTechStack, 
@@ -23,15 +22,40 @@ import { updateProject } from "../store/userSlice";
 import axiosInstance from "../apiCalls";
 
 const Editor = () => {
-  const navigate=useNavigate();
+const navigate=useNavigate();
 const dispatch=useDispatch();
 const { userData } = useSelector((state) => state.user);
-  const [showPreview, setShowPreview] = useState(false);
-
+const [showPreview, setShowPreview] = useState(false);
 const [newTech, setNewTech] = useState("");
-const [newProject, setNewProject] = useState("");
-const [newExperience, setNewExperience] = useState("");
-const [image,setImage]=useState('');// File Selection Function
+const [typeSelect,setTypeSelect]=useState(false);
+const location = useLocation();
+const hasPortfolio = location.state?.hasPortfolio; 
+
+useEffect(() => {
+  const userId = localStorage.getItem("id");
+  if (!userData || !userData.firstName) {
+    const fetchUserData = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/user/get-portfolio/${userId}`);
+        if (response.data) {
+          const cleanData = {
+            ...response.data.data,
+            profilePic: response.data.profilePic || '', // Ensures empty if undefined
+            aboutPic: response.data.aboutPic || '' // Ensures empty if undefined
+          };
+          dispatch(setUserData(cleanData));
+          console.log(userData);
+          console.log("dispatched data");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUserData();
+  }
+}, [dispatch]);
+
+
 const onFileSelect = (index) => (e) => {
   const file = e.target.files[0];
   const reader = new FileReader();
@@ -132,9 +156,9 @@ const handleRemoveProject = (index) => {
     dispatch(removeExperience(index));
   }
 
-useEffect(() => {
-  console.log("Updated userData:", userData);
-}, [userData]);
+// useEffect(() => {
+//   console.log("Updated userData:", userData);
+// }, [userData]);
 useEffect(() => {
   console.log("Updated techStack:", userData.techStack);
 }, [userData.techStack]);
@@ -143,7 +167,27 @@ const formSubmit = async (e) => {
   e.preventDefault();
   try {
       const response = await axiosInstance.post(
-          `/api/user/create-portifolio`,
+       "/api/user/update-portfolio",
+          userData
+      );
+      // Use `response.data.success` instead of `response?.success`
+      if (response.data?.success) {
+          toast.success(response.data?.message);
+          navigate('/preview');
+      } else {
+          toast.error(response.data?.message || "Unexpected error occurred");
+      }
+
+  } catch (error) {
+      console.error("Error during signup:", error);
+      toast.error(`Error: ${error.response?.data?.message || error.message || "Something went wrong"}`);
+  }
+}
+const formSubmit2 = async (e) => {
+  e.preventDefault();
+  try {
+      const response = await axiosInstance.post(
+       "/api/user/create-portifolio",
           userData
       );
       // Use `response.data.success` instead of `response?.success`
@@ -167,6 +211,7 @@ const formSubmit = async (e) => {
   return (
     <div className={` ${showPreview ? "min-h-screen overflow-x-hidden font-inter" : "min-h-screen flex justify-center items-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-neutral-200 p-6 font-inter"}`}
     >
+        
       {showPreview ? (
         <div className="relative w-full min-h-screen">
           {/* Back Button */}
@@ -185,7 +230,10 @@ const formSubmit = async (e) => {
          
         </div>
       ) : (
+       
+       <div className="flex flex-col gap-2 justify-center items-center "> <LogoutButton/>
         <div className="w-full max-w-3xl bg-gray-800 p-6 rounded-xl shadow-lg">
+         
   <h2 className="text-2xl font-bold mb-6 text-center text-cyan-400">Portfolio Generator</h2>
 
   <div className="space-y-6">
@@ -470,12 +518,33 @@ const formSubmit = async (e) => {
       Preview Portfolio →
     </button>
   </div>
-  <button
+  <div className="flex gap-2">
+  {hasPortfolio ? (
+    // Show Update Portfolio button if user has a portfolio
+    <button
       className="w-full py-3 mt-6 bg-cyan-500 text-white font-bold text-lg rounded-lg hover:bg-cyan-600 transition-all"
-      onClick={formSubmit}
+      onClick={(e) => {
+        setTypeSelect(!typeSelect);
+        formSubmit(e);
+      }}
     >
-      create portifolio
+      Update Portfolio
     </button>
+  ) : (
+    // Show Create Portfolio button if user has no portfolio
+    <button
+      className="w-full py-3 mt-6 bg-cyan-500 text-white font-bold text-lg rounded-lg hover:bg-cyan-600 transition-all"
+      onClick={(e) => {
+        setTypeSelect(!typeSelect);
+        formSubmit2(e);
+      }}
+    >
+      Create Portfolio
+    </button>
+  )}
+</div>
+
+</div>
 </div>
 
       )}

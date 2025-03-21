@@ -35,7 +35,8 @@ const portfolioSchema = new mongoose.Schema({
         linkedin: { type: String },
         x: { type: String },
         insta: { type: String }
-    }
+    },
+    url: { type: String, required: true, unique: true },
 });
 
 const Portfolio = mongoose.model("Portfolio", portfolioSchema);

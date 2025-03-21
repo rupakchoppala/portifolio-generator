@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { getLoggedUser } from "../apiCalls/user";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-import { setUserData } from "../store/userSlice";
+//import { setUserData } from "../store/userSlice";
 
 const ProtectedRoute = ({ children }) => {
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -14,9 +14,8 @@ const ProtectedRoute = ({ children }) => {
     try {
       const response = await getLoggedUser();
       console.log("getLoggedUser Response:", response);
-
       if (response?.success) {
-        dispatch(setUserData(response.data));
+       
         console.log("User data set in Redux:", response.data);
       } else {
         throw new Error(response?.message || "Session expired.");

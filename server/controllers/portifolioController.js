@@ -5,6 +5,31 @@ import User from "../models/user.js";
 import mongoose from "mongoose";
 import cloudinary from "../cloudinary.js";
 const router=express.Router();
+router.post('/update-portfolio', authMiddleWare, async (req, res) => {
+    try {
+        const userId = req.body.userId; // Assuming `authMiddleware` sets `req.user.userId`
+
+        // Exclude `_id` from the update data to prevent modification attempts
+        const { _id, ...updateData } = req.body;
+
+        const updatedPortfolio = await Portfolio.findOneAndUpdate(
+            { userId },             // Filter by `userId`
+            { $set: updateData },   // Only update non-immutable fields
+            { new: true, upsert: true } // Return updated doc & create if not exists
+        );
+        return res.status(200).send({
+            message: "Portfolio updated successfully",
+            success: true,
+            data: updatedPortfolio
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({
+            message: "Error in creating/updating portfolio",
+            success: false
+        });
+    }
+});
 router.post('/create-portifolio',authMiddleWare,async(req,res)=>{
     try{
     const createPortifolio=new Portfolio(req.body);
@@ -26,6 +51,7 @@ catch(err){
 }
 
 );
+
 router.post('/upload-profile-pic', authMiddleWare, async (req, res) => {
     try {
         // console.log("Request Headers:", req.headers);
@@ -173,12 +199,12 @@ router.get('/get-all-user', authMiddleWare, async (req, res) => {
     }
 });
 
-router.get('/get-portifolio', authMiddleWare, async (req, res) => {
+router.get('/get-portfolio/:id', authMiddleWare, async (req, res) => {
     try {
-        const userId = req.body.userId; // Assuming `authMiddleware` attaches `req.user`
-        
-        const user_data = await Portfolio.findOne({ userId }); // Assuming `userId` is stored in Portfolio schema
-        
+        const userId = req.params.id; // Use req.params for URL parameters
+
+        const user_data = await Portfolio.findOne({ userId });
+
         if (!user_data) {
             return res.status(404).send({
                 message: 'Portfolio not found',
@@ -198,6 +224,7 @@ router.get('/get-portifolio', authMiddleWare, async (req, res) => {
         });
     }
 });
+
 
 
 export default router;

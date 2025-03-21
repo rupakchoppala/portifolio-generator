@@ -18,7 +18,8 @@ const initialState = {
             insta: "",
             x: ""
         }
-    }
+    },
+    portfolioData: null,
 };
 
 const userSlice = createSlice({
@@ -28,7 +29,9 @@ const userSlice = createSlice({
         setUserData: (state, action) => {
             state.userData = { ...state.userData, ...action.payload };
         },
-
+        setPortfolioData: (state, action) => {
+            state.portfolioData = action.payload; // New action for portfolio data
+          },
         // Tech Stack
         addTechStack: (state, action) => {
             state.userData.techStack.push(action.payload);
@@ -94,6 +97,7 @@ const userSlice = createSlice({
 
 export const { 
     setUserData, 
+    setPortfolioData,
     addTechStack, 
     removeTechStack, 
     addExperience, 

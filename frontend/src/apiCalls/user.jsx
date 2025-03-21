@@ -30,7 +30,7 @@ export const UploadProfilePic=async(image)=>{
 }
 export const createPortifolio=async(userData)=>{
     try{
-   const response= await axiosInstance.post('/api/user/create-portifolio',userData)
+   const response= await axiosInstance.post('/api/user/create-or-update--portifolio',userData)
    return response.data;
     }
     catch(err){
