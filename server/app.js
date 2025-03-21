@@ -17,4 +17,15 @@ import userRoutes from  './controllers/portifolioController.js';
 app.use('/api/auth',authRoutes);
 //app.use("/uploads", express.static("uploads"));
 app.use('/api/user',userRoutes);
+app.get("/user/:username", async (req, res) => {
+  const { username } = req.params;
+  const user = await User.findOne({ username }); // Fetch user data from DB
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  res.json(user);
+});
+
 export default app;

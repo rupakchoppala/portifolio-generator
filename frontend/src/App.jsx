@@ -11,6 +11,7 @@ import axiosInstance from "./apiCalls";
 import { useEffect ,useState} from "react";
 import ProtectedRoute from "./components/protectedRoute";
 import Home from "./pages/Home";
+import UserPortfolio from "./components/portifolio";
 function App() {
   const { userData } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
@@ -45,6 +46,7 @@ function App() {
         <Route path="/preview" element={<ProtectedRoute>< Portfolio userData={userData}/></ProtectedRoute>} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Home />} />
+        <Route path="/user/:username" element={<UserPortfolio />} />
       </Routes>
     </Router>
     </>
