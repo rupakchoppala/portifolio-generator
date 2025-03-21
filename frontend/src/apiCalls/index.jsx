@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: "https://portifolio-generator-cyan.vercel.app/",
+    baseURL: "https://portifolio-generator-3.onrender.com",
     headers: {
         "Content-Type": "application/json"
     }
