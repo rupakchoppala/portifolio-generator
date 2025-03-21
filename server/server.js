@@ -10,7 +10,7 @@ if (!port) {
 }
 app.get("/user/:username", async (req, res) => {
     const { username } = req.params;
-    const user = await User.findOne({ username }); // Fetch user data from DB
+    const user = await User.findOne({ firstName:username }); // Fetch user data from DB
   
     if (!user) {
       return res.status(404).json({ message: "User not found" });
