@@ -12,7 +12,7 @@ const LogoutButton = () => {
     persistor.purge();
     localStorage.removeItem("token");
     localStorage.removeItem("id");
-    window.location.reload();
+   // window.location.reload();
     navigate("/");
     console.log("User logged out and state reset!");
   };
