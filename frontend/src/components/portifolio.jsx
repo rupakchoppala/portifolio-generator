@@ -16,20 +16,24 @@ const UserPortfolio = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        
-
         const response = await fetch(`https://portifolio-generator-4.onrender.com/api/user/${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         });
-
+  
+        // Check if response is actually JSON
+        const contentType = response.headers.get("content-type");
         if (!response.ok) {
           const errorData = await response.text();
           throw new Error(`Error ${response.status}: ${errorData}`);
         }
-
+  
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Invalid response format (expected JSON)");
+        }
+  
         const data = await response.json();
         setUserData(data);
       } catch (err) {
@@ -37,9 +41,10 @@ const UserPortfolio = () => {
         setError(err.message);
       }
     };
-
+  
     fetchUserData();
   }, [userId]);
+  
 
   if (error) return <h2 className="text-red-500">Error: {error}</h2>;
   if (!userData) return <h2>Loading...</h2>;
