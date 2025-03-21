@@ -11,22 +11,43 @@ import Contact from "./contacts";
 const UserPortfolio = () => {
   const { userId } = useParams();  // Get the username from the URL
   const [userData, setUserData] = useState(null);
+  const [error, setError] = useState(null);
 
-  useEffect(async() => {
-    const token = localStorage.getItem("token"); // Assuming you're storing it here
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-const response = await fetch(`https://portifolio-generator-4.onrender.com/api/user/${userId}`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`, // Attach the token
-  },
-  
-});
-const data = await response.data;
-setUserData(data);
+        if (!token) {
+          setError("No token found. Please log in.");
+          return;
+        }
+
+        const response = await fetch(`https://portifolio-generator-4.onrender.com/api/user/${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.text();
+          throw new Error(`Error ${response.status}: ${errorData}`);
+        }
+
+        const data = await response.json();
+        setUserData(data);
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        setError(err.message);
+      }
+    };
+
+    fetchUserData();
   }, [userId]);
 
+  if (error) return <h2 className="text-red-500">Error: {error}</h2>;
   if (!userData) return <h2>Loading...</h2>;
 
   return (
