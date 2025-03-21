@@ -12,11 +12,19 @@ const UserPortfolio = () => {
   const { firstName } = useParams();  // Get the username from the URL
   const [userData, setUserData] = useState(null);
 
-  useEffect(() => {
-    fetch(`https://portifolio-generator-3.onrender.com/api/user/${firstName}`) // Fetch user data from backend
-      .then((res) => res.json())
-      .then((data) => setUserData(data))
-      .catch((err) => console.error(err));
+  useEffect(async() => {
+    const token = localStorage.getItem("token"); // Assuming you're storing it here
+
+const response = await fetch(`https://portifolio-generator-4.onrender.com/api/user/${firstName}`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`, // Attach the token
+  },
+  
+});
+const data = await response.json();
+setUserData(data);
   }, [firstName]);
 
   if (!userData) return <h2>Loading...</h2>;
