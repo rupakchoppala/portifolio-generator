@@ -13,7 +13,7 @@ const UserPortfolio = () => {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    fetch(`https://portifolio-generator-3.onrender.com/user/${firstName}`) // Fetch user data from backend
+    fetch(`https://portifolio-generator-3.onrender.com/api/user/${firstName}`) // Fetch user data from backend
       .then((res) => res.json())
       .then((data) => setUserData(data))
       .catch((err) => console.error(err));

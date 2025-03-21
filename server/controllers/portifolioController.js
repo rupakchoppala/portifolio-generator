@@ -34,11 +34,9 @@ router.post('/create-portifolio',authMiddleWare,async(req,res)=>{
     try{
     const createPortifolio=new Portfolio(req.body);
     const savedData=await createPortifolio.save();
-    const portfolioUrl = `https://portifolio-generator-4.onrender.com//user/${firstName}`;
     return res.status(200).send({
         message:"portifolio created successfully",
         success:true,
-        portfolioUrl
 
     })
 }
