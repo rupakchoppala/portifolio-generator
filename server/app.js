@@ -5,7 +5,7 @@ const app=express();
 //app.use(express.json());
 app.use(
     cors({
-      origin: ["http://localhost:5173", "https://portifolio-generator-z83b.vercel.app/"],
+      origin: ["http://localhost:5173", "https://portifolio-generator-4.onrender.com/"],
       credentials: true, // Allow cookies and auth headers
       methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
     })
