@@ -186,9 +186,16 @@ const formSubmit = async (e) => {
 const formSubmit2 = async (e) => {
   e.preventDefault();
   try {
+    const token = localStorage.getItem("token");
       const response = await axiosInstance.post(
        "/api/user/create-portifolio",
-          userData
+          userData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Send token in headers
+              "Content-Type": "application/json",
+            },
+          }
       );
       // Use `response.data.success` instead of `response?.success`
       if (response.data?.success) {
