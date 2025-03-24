@@ -24,7 +24,7 @@ const UserPortfolio = () => {
     
         console.log("Full Response:", response);
     
-        // Check if response is JSON
+        // // Check if response is JSON
         // const contentType = response.headers.get("content-type");
         // if (!contentType || !contentType.includes("application/json")) {
         //   const responseText = await response.text();
@@ -32,7 +32,7 @@ const UserPortfolio = () => {
         //   throw new Error("Invalid response format (expected JSON)");
         // }
     
-        const data = await response.data;
+        const data = await response.json();
         console.log("Fetched Data:", data);
         setUserData(data);
       } catch (err) {

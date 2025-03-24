@@ -28,11 +28,7 @@ app.get('/api/user/:id', async (req, res) => {
 
         if (!user) return res.status(404).json({ message: '❌ User not found' });
 
-        return res.status(200).json({
-            message: "✅ Portfolio fetched successfully",
-            success: true,
-            user
-        });
+        return res.json(user)
     } catch (error) {
         console.error("❌ Error fetching user:", error);
         res.status(500).json({ message: 'Server error', error: error.message });
