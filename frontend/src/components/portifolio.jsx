@@ -18,7 +18,7 @@ const UserPortfolio = () => {
     const fetchUserData = async () => {
       try {
         console.log("Fetching user data for:", id);
-        const response = await axios.get(`https://portifolio-generator-4.onrender.com/api/user/get-portfolio/${userId}`, {
+        const response = await axios.get(`https://portifolio-generator-4.onrender.com/api/user/get-portfolio/${id}`, {
           headers: { "Content-Type": "application/json" },
         });
     
