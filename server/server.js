@@ -10,13 +10,15 @@ if (!port) {
 }
 app.get('/api/user/:id', async (req, res) => {
     try {
-        const user = await User.findOne(req.params.id);
+        const user = await User.findOne({ userId: req.params.id }); // Correct query format
         if (!user) return res.status(404).json({ message: 'User not found' });
         res.json(user);
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 });
+
 
   
 app.listen(port, () => {

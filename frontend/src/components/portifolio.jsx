@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import Navbar from "./Navbar";
 import Hero from "./Hero";
 import About from "./About";
@@ -17,33 +18,15 @@ const UserPortfolio = () => {
     const fetchUserData = async () => {
       try {
         console.log("Fetching user data for:", id);
-        const response = await fetch(`https://portifolio-generator-4.onrender.com/api/user/${id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        console.log("Full Response:", response);
-
-        if (!response.ok) {
-          const errorData = await response.text(); // Read error response
-          throw new Error(`Error ${response.status}: ${errorData}`);
-        }
-
-        const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          const responseText = await response.text();
-          console.error("Received non-JSON response:", responseText);
-          throw new Error("Invalid response format (expected JSON)");
-        }
-
-        const data = await response.json();
+        
+        const { data } = await axios.get(
+          `https://portifolio-generator-4.onrender.com/api/user/${id}`
+        );
         console.log("Fetched Data:", data);
         setUserData(data);
       } catch (err) {
         console.error("Error fetching user data:", err);
-        setError(err.message);
+        setError(err.response?.data || err.message);
       }
     };
 
