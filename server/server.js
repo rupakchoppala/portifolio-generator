@@ -8,11 +8,16 @@ if (!port) {
     console.error("Port number not found in environment variables!");
     process.exit(1);
 }
-app.get("/api/user/:userId", async (req, res) => {
-    const user = await User.findById(req.params.userId);
-    if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user); // No authentication needed
-  });
+app.get('/api/user/:id', async (req, res) => {
+    try {
+        const user = await User.findOne(req.params.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
   
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
