@@ -9,42 +9,46 @@ import Projects from "./Projects";
 import Contact from "./contacts";
 
 const UserPortfolio = () => {
-  const { userId } = useParams();  // Get the username from the URL
+  const { id } = useParams(); // Ensure the parameter matches the route path
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`https://portifolio-generator-4.onrender.com/api/user/${userId}`, {
+        console.log("Fetching user data for:", id);
+        const response = await fetch(`https://portifolio-generator-4.onrender.com/api/user/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         });
-  
-        // Check if response is actually JSON
-        const contentType = response.headers.get("content-type");
+
+        console.log("Full Response:", response);
+
         if (!response.ok) {
-          const errorData = await response.text();
+          const errorData = await response.text(); // Read error response
           throw new Error(`Error ${response.status}: ${errorData}`);
         }
-  
+
+        const contentType = response.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
+          const responseText = await response.text();
+          console.error("Received non-JSON response:", responseText);
           throw new Error("Invalid response format (expected JSON)");
         }
-  
+
         const data = await response.json();
+        console.log("Fetched Data:", data);
         setUserData(data);
       } catch (err) {
         console.error("Error fetching user data:", err);
         setError(err.message);
       }
     };
-  
+
     fetchUserData();
-  }, [userId]);
-  
+  }, [id]);
 
   if (error) return <h2 className="text-red-500">Error: {error}</h2>;
   if (!userData) return <h2>Loading...</h2>;
