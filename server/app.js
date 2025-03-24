@@ -7,7 +7,7 @@ app.use(
   cors({
     origin: [
       "https://portifolio-generator-4.onrender.com", 
-      "https://portifolio-generator-4.onrender.com/user/:id"
+      "https://portifolio-generator-4.onrender.com/api/user/:id"
     ], // ✅ Use an array for multiple origins
     methods: "GET, POST, PUT, DELETE",
     allowedHeaders: ["Content-Type", "Authorization"],
