@@ -19,7 +19,7 @@ const UserPortfolio = () => {
       try {
         console.log("Fetching user data for:", id);
         
-        const { data } = await axios.get(
+        const data= await axios.get(
           `https://portifolio-generator-4.onrender.com/api/user/${id}`
         );
         console.log("Fetched Data:", data);

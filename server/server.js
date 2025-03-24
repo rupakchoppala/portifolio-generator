@@ -12,7 +12,11 @@ app.get('/api/user/:id', async (req, res) => {
     try {
         const user = await User.findOne({ userId: req.params.id }); // Correct query format
         if (!user) return res.status(404).json({ message: 'User not found' });
-        res.json(user);
+        return res.status(200).send({
+            message:"portifolio fetched  successfully for you",
+            success:true,
+            user
+        })
     } catch (error) {
         console.error("Error fetching user:", error);
         res.status(500).json({ message: 'Server error', error: error.message });
