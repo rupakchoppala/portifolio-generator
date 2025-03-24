@@ -18,17 +18,30 @@ const UserPortfolio = () => {
     const fetchUserData = async () => {
       try {
         console.log("Fetching user data for:", id);
-        
-        const data= await axios.get(
-          `https://portifolio-generator-4.onrender.com/api/user/${id}`
-        );
+        const response = await fetch(`https://portifolio-generator-4.onrender.com/api/user/${id}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+    
+        console.log("Full Response:", response);
+    
+        // Check if response is JSON
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const responseText = await response.text();
+          console.error("Received non-JSON response:", responseText);
+          throw new Error("Invalid response format (expected JSON)");
+        }
+    
+        const data = await response.json();
         console.log("Fetched Data:", data);
         setUserData(data);
       } catch (err) {
         console.error("Error fetching user data:", err);
-        setError(err.response?.data || err.message);
+        setError(err.message);
       }
     };
+    
 
     fetchUserData();
   }, [id]);
