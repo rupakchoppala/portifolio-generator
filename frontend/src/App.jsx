@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import ProtectedRoute from "./components/protectedRoute";
 import Home from "./pages/Home";
 import UserPortfolio from "./components/portifolio";
+import Loader from "./components/Loader";
 
 function App() {
   const { userData } = useSelector((state) => state.user);
@@ -39,7 +40,7 @@ function App() {
     fetchData();
   }, [dispatch]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loader/>
 
   return (
     <>
