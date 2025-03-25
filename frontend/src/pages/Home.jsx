@@ -1,16 +1,44 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
+const features = [
+  { title: "Instant Generation & Preview", desc: "Create a portfolio in seconds with customized templates and quick preview." },
+  { title: "Customizable Designs", desc: "Personalize colors, layouts, and sections easily." },
+  { title: "Responsive & Fast", desc: "Optimized for mobile, tablet, and desktop." },
+  { title: "AI-Based Recommendations", desc: "Let AI suggest the best templates and styles for you." },
+];
+
+const rollingTextVariants = {
+  animate: { x: ["100%", "-100%"], transition: { repeat: Infinity, duration: 10, ease: "linear" } }
+};
 
 const Home = () => {
   const navigate = useNavigate();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % features.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden font-inter">
+      
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500 via-purple-700 to-black opacity-20"></div>
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-pink-400 rounded-full blur-[150px] opacity-30"></div>
         <div className="absolute top-20 right-10 w-60 h-60 bg-blue-400 rounded-full blur-[120px] opacity-30"></div>
+      </div>
+
+      {/* Rolling Text Animation */}
+      <div className="absolute top-8 w-full overflow-hidden whitespace-nowrap">
+        <motion.div className="text-2xl font-bold text-pink-400 uppercase tracking-wider" variants={rollingTextVariants} animate="animate">
+          🚀 Build Your Portfolio Instantly | 🎨 AI-Powered Customization | ⚡ Blazing Fast Performance |
+        </motion.div>
       </div>
 
       {/* Hero Section */}
@@ -38,28 +66,21 @@ const Home = () => {
         </motion.button>
       </motion.div>
 
-      {/* Features Section */}
-      <motion.div 
-        initial={{ opacity: 0, y: 50 }} 
-        animate={{ opacity: 1, y: 0 }} 
-        transition={{ duration: 1.5, delay: 0.5 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 px-10 max-w-6xl"
-      >
-        {[
-          { title: "Instant Generation And Preview", desc: "Create a portfolio in seconds with customised templates and qucik preview." },
-          { title: "Customizable Designs", desc: "Personalize colors, layouts, and sections easily." },
-          { title: "Responsive & Fast", desc: "Optimized for mobile, tablet, and desktop." }
-        ].map((feature, index) => (
-          <motion.div 
-            key={index} 
-            whileHover={{ scale: 1.05 }} 
-            className="p-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-lg border border-gray-700 text-center"
-          >
-            <h3 className="text-2xl font-semibold text-blue-400">{feature.title}</h3>
-            <p className="text-gray-400 mt-2">{feature.desc}</p>
-          </motion.div>
-        ))}
-      </motion.div>
+      {/* Features Carousel */}
+      <div className="relative mt-16 w-full max-w-3xl h-40 overflow-hidden">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.8 }}
+          className="absolute inset-0 flex flex-col items-center justify-center p-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-lg border border-gray-700 text-center"
+        >
+          <h3 className="text-2xl font-semibold text-blue-400">{features[currentIndex].title}</h3>
+          <p className="text-gray-400 mt-2">{features[currentIndex].desc}</p>
+        </motion.div>
+      </div>
+
     </div>
   );
 };

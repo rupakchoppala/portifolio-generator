@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { LoginUser } from "../apiCalls/auth";
 import toast from "react-hot-toast";
+import Loader from "../components/Loader";
 
 const Login = () => {
   const [userData, setUserData] = useState({
     email: "",
     password: ""
   });
+  const[loading,setLoading]=useState(true);
 
   const navigate = useNavigate();
 
@@ -26,9 +28,11 @@ const Login = () => {
       const response=await LoginUser(userData);
       if(response.success){
         toast.success(response.message);
+        setLoading(!loading);
         localStorage.setItem('token',response.token);
         localStorage.setItem('id',response.id);
         setTimeout(() => {
+          setLoading(!loading);
           navigate("/dashboard");
       }, 1500);
 
@@ -45,6 +49,7 @@ const Login = () => {
 
     }
   };
+  if(!loading) return <Loader/>
 
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 font-inter">
@@ -53,8 +58,6 @@ const Login = () => {
           Login
         </h2>
         <form onSubmit={handleRegister} className="space-y-4">
-         
-
           <div className="relative">
             <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
             <input
