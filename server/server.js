@@ -30,7 +30,7 @@ app.get('/api/user/:id', async (req, res) => {
         return res.status(200).json({
             message:"portfolio deployed ",
             success:true,
-            user
+            data:user
         })
     } catch (error) {
         console.error("❌ Error fetching user:", error);
