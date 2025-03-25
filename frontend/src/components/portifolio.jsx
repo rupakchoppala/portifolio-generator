@@ -33,7 +33,7 @@ const UserPortfolio = () => {
         //   throw new Error("Invalid response format (expected JSON)");
         // }
     
-        const data = await response.data;
+        const data = await response.data.data;
         console.log("Fetched Data:", data);
         setUserData(data);
       } catch (err) {
