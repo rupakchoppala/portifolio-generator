@@ -30,7 +30,7 @@ const Portfolio = ({ userData }) => {
               href={portfolioLink} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="px-6 py-3  text-neutral-900 font-bold rounded-lg hover:bg-cyan-600 transition duration-300"
+              className="px-6 py-3  text-neutral-400 font-bold rounded-lg hover:bg-cyan-600 transition duration-300"
             >
              Link for the future Use and Refernce: {portfolioLink}
             </a>
