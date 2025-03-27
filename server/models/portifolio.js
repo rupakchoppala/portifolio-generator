@@ -19,6 +19,15 @@ const portfolioSchema = new mongoose.Schema({
             technologies: { type: [String] }  // Added technologies array here
         }
     ],
+    achievements: [
+        {
+            date: { type: String },
+            title: { type: String },
+            organization: { type: String }, // e.g., "Jan 2022 - Dec 2023"
+            description: { type: String, required: false },
+           // technologies: { type: [String] }  // Added technologies array here
+        }
+    ],
     projects: [
         {
             title: { type: String, required: false },

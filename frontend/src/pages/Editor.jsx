@@ -16,7 +16,10 @@ import {
   addProject,
   removeProject, 
   updateContact,
-  updateProjectImage 
+  updateProjectImage ,
+  addActivity,
+  updateActivity,
+  removeActivity
 } from '../store/userSlice';
 import { updateProject } from "../store/userSlice";
 import axiosInstance from "../apiCalls";
@@ -155,6 +158,10 @@ const handleRemoveProject = (index) => {
   const handleRemoveExperience=(index)=>{
     dispatch(removeExperience(index));
   }
+  const handleRemoveActivity=(index)=>{
+    dispatch(removeActivity(index));
+  }
+
 
 // useEffect(() => {
 //   console.log("Updated userData:", userData);
@@ -199,7 +206,7 @@ const formSubmit2 = async (e) => {
       );
       // Use `response.data.success` instead of `response?.success`
       if (response.data?.success) {
-          toast.success(response.data?.message);
+          toast.success(response.data?.message);ss
           navigate('/preview');
       } else {
           toast.error(response.data?.message || "Unexpected error occurred");
@@ -426,6 +433,58 @@ const formSubmit2 = async (e) => {
       value={userData.experience}
       onChange={(e) => setUserData({ ...userData, experience: e.target.value })}
     /> */}
+    {/* Achievements And Activities */}
+    <div className="space-y-4">
+      <label className="text-cyan-400 font-semibold">Achievements/Activities</label>
+      {userData?.achievements?.map((activity, index) => (
+       <div key={index} className="grid grid-cols-4 gap-3 p-3 rounded-lg bg-gray-800">
+       <input
+           type="text"
+           placeholder={`Date`}
+           className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+           value={activity.date}
+           onChange={(e) => dispatch(updateActivity({index, field: 'date', value:e.target.value}))}
+       />
+        <input
+           type="text"
+           placeholder={`title`}
+           className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+           value={activity.title}
+           onChange={(e) =>
+            dispatch(updateActivity({index, field: 'title', value:e.target.value}))}
+       />
+       <input
+           type="text"
+           placeholder={`organiZation`}
+           className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+           value={activity.organization}
+           onChange={(e) =>
+            dispatch(updateActivity({index, field: 'organization', value:e.target.value}))}
+       />
+ 
+       <textarea
+           placeholder={`Description`}
+           className="w-full p-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm"
+           value={activity.description}
+           onChange={(e) => dispatch(updateActivity({index, field: 'description', value:e.target.value}))}
+       />
+       
+        <button
+                className="text-red-500 hover:text-red-600"
+                onClick={() => handleRemoveActivity(index)}
+            >
+                Remove
+            </button>
+      
+   </div>
+      ))}
+      <button
+        className="w-full py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-all"
+        onClick={()=>dispatch(addActivity())}
+      >
+        + Add Achievements/Activities
+      </button>
+    </div>
 
     {/* Projects */}
  {/* Projects */}

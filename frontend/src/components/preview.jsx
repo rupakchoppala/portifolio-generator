@@ -5,6 +5,7 @@ import Technologies from "./Technologies";
 import Experience from "./Experience";
 import Project from "./Projects";
 import Contact from "./contacts";
+import AchievementsAndActivities from "./Activities";
 
 const Portfolio = ({ userData }) => {
   const userId = localStorage.getItem("id"); // Get userId from localStorage
@@ -20,7 +21,10 @@ const Portfolio = ({ userData }) => {
           <Hero data={userData} />
           <About data={userData} />
           <Technologies data={userData} />
-          <Experience data={userData} />
+          <div>
+  {userData?.experience?.length > 0 && <Experience data={userData} />}
+  {userData?.achievements?.length > 0 && <AchievementsAndActivities data={userData} />}
+  </div>
           <Project data={userData} />
           <Contact data={userData} />
 

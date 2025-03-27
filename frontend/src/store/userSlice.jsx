@@ -10,6 +10,7 @@ const initialState = {
         techStack: [],
         experience: [],
         projects: [],
+        achievements:[],
         contact: {
             email: "",
             phone: "",
@@ -56,6 +57,22 @@ const userSlice = createSlice({
         },
         removeExperience: (state, action) => {
             state.userData.experience.splice(action.payload, 1);
+        },
+        //Activities And achievements
+        addActivity: (state) => {
+            state.userData.achievements.push({
+                date: "",
+                title: "",
+                organization:"",
+                description: "",
+            });
+        },
+        updateActivity: (state, action) => {
+            const { index, field, value } = action.payload;
+            state.userData.achievements[index][field] = value;
+        },
+        removeActivity: (state, action) => {
+            state.userData.achievements.splice(action.payload, 1);
         },
 
         // Projects
@@ -107,7 +124,10 @@ export const {
     updateProject, 
     removeProject, 
     updateContact,
-    updateProjectImage 
+    updateProjectImage ,
+    addActivity,
+    updateActivity,
+    removeActivity
 } = userSlice.actions;
 
 export default userSlice.reducer;

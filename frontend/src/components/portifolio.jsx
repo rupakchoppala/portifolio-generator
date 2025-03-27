@@ -8,6 +8,7 @@ import Technoligies from "./Technologies";
 import Experience from "./Experience";
 import Project from "./Projects";
 import Contact from "./contacts";
+import AchievementsAndActivities from "./Activities";
 
 
 const UserPortfolio = () => {
@@ -59,7 +60,10 @@ const UserPortfolio = () => {
           <Hero data={userData} />
           <About data={userData} />
           <Technoligies data={userData} />
-          <Experience data={userData} />
+          <div>
+  {userData?.experience?.length > 0 && <Experience data={userData} />}
+  {userData?.achievements?.length > 0 && <AchievementsAndActivities data={userData} />}
+</div>
           <Project data={userData} />
           <Contact data={userData} />
         </div>
