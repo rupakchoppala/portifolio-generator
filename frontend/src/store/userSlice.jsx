@@ -10,7 +10,7 @@ const initialState = {
         techStack: [],
         experience: [],
         projects: [],
-        achievements:[],
+        achievements: [], // ✅ Properly initialized as an empty array
         contact: {
             email: "",
             phone: "",
@@ -28,11 +28,17 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUserData: (state, action) => {
-            state.userData = { ...state.userData, ...action.payload };
+            state.userData = { 
+                ...state.userData, 
+                ...action.payload, 
+                achievements: action.payload.achievements || state.userData.achievements // ✅ Preserve achievements
+            };
         },
+
         setPortfolioData: (state, action) => {
-            state.portfolioData = action.payload; // New action for portfolio data
-          },
+            state.portfolioData = action.payload;
+        },
+
         // Tech Stack
         addTechStack: (state, action) => {
             state.userData.techStack.push(action.payload);
@@ -48,28 +54,36 @@ const userSlice = createSlice({
                 position: "",
                 duration: "",
                 description: "",
-                technologies:[]
+                technologies: []
             });
         },
         updateExperience: (state, action) => {
             const { index, field, value } = action.payload;
-            state.userData.experience[index][field] = value;
+            if (state.userData.experience[index]) {
+                state.userData.experience[index][field] = value;
+            }
         },
         removeExperience: (state, action) => {
             state.userData.experience.splice(action.payload, 1);
         },
-        //Activities And achievements
+
+        // Activities & Achievements
         addActivity: (state) => {
+            if (!state.userData.achievements) {
+                state.userData.achievements = []; // ✅ Ensure it's initialized
+            }
             state.userData.achievements.push({
                 date: "",
                 title: "",
-                organization:"",
+                organization: "",
                 description: "",
             });
         },
         updateActivity: (state, action) => {
             const { index, field, value } = action.payload;
-            state.userData.achievements[index][field] = value;
+            if (state.userData.achievements[index]) {
+                state.userData.achievements[index][field] = value;
+            }
         },
         removeActivity: (state, action) => {
             state.userData.achievements.splice(action.payload, 1);
@@ -84,33 +98,33 @@ const userSlice = createSlice({
                 technologies: []
             });
         },
-        updateProject: (state, action) => {  // ✅ Now inside the reducers object
+        updateProject: (state, action) => {
             const { index, field, value } = action.payload;
-            state.userData.projects[index][field] = value;
+            if (state.userData.projects[index]) {
+                state.userData.projects[index][field] = value;
+            }
         },
         removeProject: (state, action) => {
             state.userData.projects.splice(action.payload, 1);
         },
 
+        // Project Image
+        updateProjectImage: (state, action) => {
+            const { index, image } = action.payload;
+            if (state.userData.projects[index]) {
+                state.userData.projects[index].image = image;
+            }
+        },
+
         // Contact
         updateContact: (state, action) => {
             const { key, value } = action.payload;
-            state.userData.contact[key] = value;
-        },
-        updateProjectImage: (state, action) => {
-            const { index, image } = action.payload;
-        
-            // Ensure the project at the given index exists before updating
-            if (state.userData.projects[index]) {
-                state.userData.projects[index].image = image;
-            } else {
-                console.error(`Project at index ${index} does not exist.`);
+            if (state.userData.contact.hasOwnProperty(key)) {
+                state.userData.contact[key] = value;
             }
-        }
-        
+        },
     }
 });
-
 
 export const { 
     setUserData, 
@@ -124,7 +138,7 @@ export const {
     updateProject, 
     removeProject, 
     updateContact,
-    updateProjectImage ,
+    updateProjectImage,
     addActivity,
     updateActivity,
     removeActivity
