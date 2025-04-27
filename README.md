@@ -97,7 +97,7 @@ npm run dev
 ## 📸 Screenshots
 | Home Page | Create Portfolio | Final Portfolio |
 |:---------:|:----------------:|:---------------:|
-| ![Home](https://github.com/rupakchoppala/portifolio-generator/blob/main/frontend/public/Screenshot%20from%202025-04-27%2020-01-54.png) | ![Form](screenshots/form.png) | ![Portfolio](screenshots/portfolio.png) |
+| ![Home](https://github.com/rupakchoppala/portifolio-generator/blob/main/frontend/public/Screenshot%20from%202025-04-27%2020-01-54.png) | ![Form](https://github.com/rupakchoppala/portifolio-generator/blob/main/frontend/public/Screenshot%20from%202025-04-27%2020-03-32.png) | ![Portfolio](https://github.com/rupakchoppala/portifolio-generator/blob/main/frontend/public/Screenshot%20from%202025-04-27%2020-06-10.png) |
 
 ## 🙌 Contributing
 Contributions are welcome! Feel free to submit a Pull Request or open an Issue to discuss changes.
