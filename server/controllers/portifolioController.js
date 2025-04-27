@@ -52,7 +52,6 @@ catch(err){
 }
 
 );
-
 router.post('/upload-profile-pic', authMiddleWare, async (req, res) => {
     try {
         // console.log("Request Headers:", req.headers);
@@ -159,13 +158,11 @@ router.get('/get-logged-user', authMiddleWare, async (req, res) => {
     try {
         const userId = req.body.userId; // User ID attached by authMiddleware
         const user = await User.findOne({ _id: userId });
-
         if (!user) {
             return res.status(404).send(
                 { message: 'User not found',
                      success: false });
-        }
-
+     }
         return res.status(200).send({
             message: 'User fetched successfully',
             success: true,
