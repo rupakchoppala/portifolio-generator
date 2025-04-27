@@ -54,7 +54,7 @@ A dynamic and customizable **Portfolio Generator** platform where users can log 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/portfolio-generator.git
+git clone https://github.com/rupakchoppala/portfolio-generator.git
 cd portfolio-generator
 ```
 
