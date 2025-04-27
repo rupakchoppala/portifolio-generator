@@ -107,7 +107,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## 📞 Contact
 - **Developer**: [Rupak Choppala](https://portifolio-generator-4.onrender.com/api/user/67e5133c170fef03c86d15eb)
-- **LinkedIn**: [linkedin.com/in/your-profile](https://linkedin.com/in/your-profile)
-- **Email**: your-email@example.com
+- **LinkedIn**: [https://www.linkedin.com/in/rupak-choppala-689659253?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
+- **Email**: rupakchoppala@gmail.com
 
 ---
