@@ -92,7 +92,7 @@ cd client
 npm run dev
 ```
 
-5. Visit `http://localhost:5173` to view the app.
+5. Visit `https://portifolio-generator-4.onrender.com/` to view the app.
 
 ## 📸 Screenshots
 | Home Page | Create Portfolio | Final Portfolio |
